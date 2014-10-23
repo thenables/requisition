@@ -6,9 +6,12 @@
   "license": "MIT",
   "repository": "thenables/requisition",
   "dependencies": {
+    "destroy": "^1.0.3",
     "fs-cp": "^1.2.0",
     "memorizer": "^1.0.0",
     "methods": "^1.1.0",
+    "mime-types": "^2.0.2",
+    "mz": "^1.0.2",
     "native-or-bluebird": "^1.1.1",
     "statuses": "^1.2.0",
     "stream-to-array": "^2.0.2",
@@ -16,6 +19,7 @@
   },
   "devDependencies": {
     "bluebird": "^2.3.6",
+    "express": "^4.9.8",
     "istanbul": "0",
     "mocha": "2"
   },

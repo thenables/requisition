@@ -34,25 +34,25 @@ describe('Response', function () {
     })
   })
 
-  describe('.json()', function () {
-    it('should return an object', function () {
-      return request('http://ip.jsontest.com/').then(function (response) {
-        return response.json()
-      }).then(function (data) {
-        assert(typeof data === 'object')
-        assert(typeof data.ip === 'string')
-      })
-    })
-  })
-
   describe('.text()', function () {
     it('should return a string', function () {
-      return request('http://ip.jsontest.com/').then(function (response) {
+      return request('https://registry.npmjs.org/').then(function (response) {
         return response.text()
       }).then(function (string) {
         var data = JSON.parse(string)
         assert(typeof data === 'object')
-        assert(typeof data.ip === 'string')
+        assert(typeof data.db_name === 'string')
+      })
+    })
+  })
+
+  describe('.json()', function () {
+    it('should return an object', function () {
+      return request('https://registry.npmjs.org/').then(function (response) {
+        return response.json()
+      }).then(function (data) {
+        assert(typeof data === 'object')
+        assert(typeof data.db_name === 'string')
       })
     })
   })
