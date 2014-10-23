@@ -2,6 +2,7 @@
 var http = require('http');
 var assert = require('assert');
 var express = require('express');
+var Promise = require('native-or-bluebird');
 
 var request = require('..');
 

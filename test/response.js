@@ -37,6 +37,7 @@ describe('Response', function () {
   describe('.text()', function () {
     it('should return a string', function () {
       return request('https://registry.npmjs.org/').then(function (response) {
+        assert(response.status === 200);
         return response.text()
       }).then(function (string) {
         var data = JSON.parse(string)
@@ -49,6 +50,7 @@ describe('Response', function () {
   describe('.json()', function () {
     it('should return an object', function () {
       return request('https://registry.npmjs.org/').then(function (response) {
+        assert(response.status === 200);
         return response.json()
       }).then(function (data) {
         assert(typeof data === 'object')
