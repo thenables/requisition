@@ -8,6 +8,7 @@
   "dependencies": {
     "destroy": "^1.0.3",
     "fs-cp": "^1.2.0",
+    "media-typer": "^0.3.0",
     "memorizer": "^1.0.0",
     "methods": "^1.1.0",
     "mime-types": "^2.0.2",
