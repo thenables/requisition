@@ -2,6 +2,8 @@
 var http = require('http');
 var assert = require('assert');
 var express = require('express');
+var typer = require('media-typer');
+var bodyParser = require('body-parser');
 var Promise = require('native-or-bluebird');
 
 var request = require('..');
@@ -28,6 +30,168 @@ describe('Request', function () {
     })
   })
 
+  describe('.timeout()', function () {
+    var app = express();
+    app.use(function (req, res, next) {
+      setTimeout(function () {
+        res.end('timeout');
+      }, 5000);
+    })
+
+    it('basic', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .timeout(5)
+          .catch(function (err) {
+            assert.equal(err.status, 408);
+            assert.equal(err.message, 'Request Time-out');
+          })
+      })
+    })
+
+    it('send', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .timeout(5)
+          .send({ name: 'test' })
+          .catch(function (err) {
+            assert.equal(err.status, 408);
+            assert.equal(err.message, 'Request Time-out');
+          })
+      })
+    })
+
+    it('sendFile', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .timeout(5)
+          .sendFile(__filename)
+          .catch(function (err) {
+            assert.equal(err.status, 408);
+            assert.equal(err.message, 'Request Time-out');
+          })
+      })
+    })
+  })
+
+  describe('.redirects', function () {
+    var app = express();
+    app.use(function (req, res, next) {
+      var num = req.query.num | 0 || 0;
+      res.redirect('/?num=' + (++num));
+    })
+
+    it('set redirects', function () {
+      var req = request('http://localhost').redirects(5);
+      assert.equal(req._maxRedirects, 5);
+    })
+
+    it('should not redirect', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port).redirects(0);
+      }).then(function (res) {
+        assert.equal(res.statusCode, 302);
+        assert.equal(res.response.redirects.length, 0);
+      })
+    })
+
+    it('should redirect', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port).redirects(5);
+      }).then(function (res) {
+        assert.equal(res.statusCode, 302);
+        assert.deepEqual(res.response.redirects.map(function (url) {
+          return url.split('?')[1];
+        }), ['num=1', 'num=2', 'num=3', 'num=4', 'num=5']);
+      })
+    })
+
+    it('should send and redirect', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .redirects(5)
+          .send({ name: 'test' });
+      }).then(function (res) {
+        assert.equal(res.statusCode, 302);
+        assert.deepEqual(res.response.redirects.map(function (url) {
+          return url.split('?')[1];
+        }), ['num=1', 'num=2', 'num=3', 'num=4', 'num=5']);
+      })
+    })
+
+    it('should sendFile and redirect', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .redirects(5)
+          .sendFile(__filename);
+      }).then(function (res) {
+        assert.equal(res.statusCode, 302);
+        assert.deepEqual(res.response.redirects.map(function (url) {
+          return url.split('?')[1];
+        }), ['num=1', 'num=2', 'num=3', 'num=4', 'num=5']);
+      })
+    })
+  })
+
+  describe('.ifModifiedSince', function () {
+    var d = new Date();
+
+    it('(number)', function () {
+      var req = request('http://localhost').ifModifiedSince(d.getTime());
+      assert.equal(req.options.headers['If-Modified-Since'], d.toUTCString());
+    })
+
+    it('(string)', function () {
+      var req = request('http://localhost').ifModifiedSince(d.toUTCString());
+      assert.equal(req.options.headers['If-Modified-Since'], d.toUTCString());
+    })
+
+    it('(date)', function () {
+      var req = request('http://localhost').ifModifiedSince(d);
+      assert.equal(req.options.headers['If-Modified-Since'], d.toUTCString());
+    })
+  })
+
+  it('.ifNoneMatch()', function () {
+    var req = request('http://localhost').ifNoneMatch('test');
+    assert.equal(req.options.headers['If-None-Match'], 'test');
+  })
+
   describe('.type', function () {
     it('(json)', function () {
       var req = request('http://localhost').type('json');
@@ -37,6 +201,141 @@ describe('Request', function () {
 
   it('.catch()', function () {
     return request('http://localhost').catch(function () {})
+  })
+
+  describe('.query', function () {
+    var app = express();
+    app.use(function (req, res, next) {
+      res.json(req.query);
+    })
+
+    it('(object)', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .query({ name: 'test' })
+          .query({ word: 'hello' })
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.deepEqual(data, { name: 'test', word: 'hello' });
+      })
+    })
+
+    it('(object) and url', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port + '?name=test')
+          .query({ word: 'hello' })
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.deepEqual(data, { name: 'test', word: 'hello' });
+      })
+    })
+  })
+
+  describe('.send()', function () {
+    var app = express();
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(function (req, res, next) {
+      res.json({
+        type: req.get('Content-Type'),
+        body: req.body
+      });
+    })
+
+    it('should send json', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .send({ name: 'test' })
+          .send({ word: 'hello' })
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.equal(typer.parse(data.type).subtype, 'json');
+        assert.deepEqual(data.body, { name: 'test', word: 'hello' });
+      })
+    })
+
+    it('should send urlencoded by send(string)', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .send('name=test')
+          .send('word=hello')
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.equal(typer.parse(data.type).subtype, 'x-www-form-urlencoded');
+        assert.deepEqual(data.body, { name: 'test', word: 'hello' });
+      })
+    })
+
+    it('should send urlencoded by setting type', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .type('application/x-www-form-urlencoded')
+          .send({ name: 'test' })
+          .send({ word: 'hello' })
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.equal(typer.parse(data.type).subtype, 'x-www-form-urlencoded');
+        assert.deepEqual(data.body, { name: 'test', word: 'hello' });
+      })
+    })
+
+    it('should send urlencoded by setting options.headers: content-type', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port, {
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+          }
+        })
+          .send({ name: 'test' })
+          .send({ word: 'hello' })
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.equal(typer.parse(data.type).subtype, 'x-www-form-urlencoded');
+        assert.deepEqual(data.body, { name: 'test', word: 'hello' });
+      })
+    })
   })
 
   describe('.sendFile()', function () {
