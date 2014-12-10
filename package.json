@@ -22,6 +22,7 @@
   "devDependencies": {
     "bluebird": "^2.3.6",
     "body-parser": "^1.10.0",
+    "concat-stream": "^1.4.7",
     "express": "^4.9.8",
     "istanbul": "0",
     "mocha": "2"

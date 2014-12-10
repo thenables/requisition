@@ -1,10 +1,12 @@
 
 var Promise = require('native-or-bluebird');
 var tmpdir = require('os').tmpdir();
+var cat = require('concat-stream');
 var express = require('express');
 var join = require('path').join;
 var assert = require('assert');
 var fs = require('fs');
+
 var request = require('..');
 
 describe('Response', function () {
@@ -149,6 +151,18 @@ describe('Response', function () {
         return response.saveTo(filename);
       }).then(function () {
         assert.equal(fs.readFileSync(filename, 'utf8').trim().indexOf('<!DOCTYPE html>'), 0);
+      })
+    })
+  })
+
+  describe('.pipe()', function () {
+    it('should pipe', function () {
+      return request('https://github.com').then(function (response) {
+        return new Promise(function (resolve) {
+          response.pipe(cat(resolve));
+        });
+      }).then(function (buf) {
+        assert(Buffer.isBuffer(buf));
       })
     })
   })
