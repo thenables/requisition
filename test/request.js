@@ -1,6 +1,7 @@
 
 var http = require('http');
 var assert = require('assert');
+var auth = require('basic-auth');
 var express = require('express');
 var typer = require('media-typer');
 var bodyParser = require('body-parser');
@@ -27,6 +28,76 @@ describe('Request', function () {
     it('(key, value)', function () {
       var req = request('http://localhost').set('a', 'b')
       assert.equal(req.options.headers.a, 'b')
+    })
+  })
+
+  describe('.auth', function () {
+    var app = express();
+    app.use(function (req, res, next) {
+      res.json(auth(req));
+    })
+
+    it('(user)', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .auth('user')
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.deepEqual(data, { name: 'user', pass: '' });
+      })
+    })
+
+    it('(user, pass)', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .auth('user', '1234')
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.deepEqual(data, { name: 'user', pass: '1234' });
+      })
+    })
+
+    it('(user + : + pass)', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .auth('user:1234')
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.deepEqual(data, { name: 'user', pass: '1234' });
+      })
+    })
+  })
+
+  describe('.agent', function () {
+    it('()', function () {
+      var req = request('http://localhost').agent();
+      assert.strictEqual(req.options.agent, false);
+    })
+
+    it('(agent)', function () {
+      var req = request('http://localhost').agent(new http.Agent());
+      assert(req.options.agent instanceof http.Agent);
     })
   })
 

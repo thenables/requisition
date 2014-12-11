@@ -20,6 +20,7 @@
     "type-is": "^1.5.2"
   },
   "devDependencies": {
+    "basic-auth": "1",
     "bluebird": "^2.3.6",
     "body-parser": "^1.10.0",
     "concat-stream": "^1.4.7",
