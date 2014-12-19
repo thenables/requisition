@@ -67,6 +67,46 @@ Set an object of headers.
 
 Set a single header.
 
+#### request().auth(name, pass)
+
+Add basic authorization.
+
+#### request().agent(agent)
+
+Set http agent.
+
+#### request().timeout(ms)
+
+Set timeout.
+
+#### request().redirects(num)
+
+Set max redirect times.
+
+#### request().ifModifiedSince(date)
+
+Set header `If-Modified-Since`.
+
+#### request().ifNoneMatch(value)
+
+Set header `If-None-Match`.
+
+#### request().type(type)
+
+Set header `Content-Type`.
+
+### request().query(params)
+
+Add query string.
+
+### request().send(data)
+
+Add http body.
+
+### request().sendFile(filename)
+
+Send file.
+
 ### Response
 
 #### response.status
@@ -86,6 +126,18 @@ See [type-is](https://github.com/jshttp/type-is).
 #### response.get(header)
 
 Get the value for a header.
+
+#### response.charset()
+
+Get charset.
+
+#### response.etag()
+
+Get header `ETag`.
+
+#### response.lastModified()
+
+Get header `Last-Modified`.
 
 #### response.buffer().then( buffer => )
 
@@ -127,7 +179,7 @@ Dumps the response. Execute this if you haven't handled the body.
 
 #### response.destroy()
 
-Destroy the response. 
+Destroy the response.
 
 [npm-image]: https://img.shields.io/npm/v/requisition.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/requisition
