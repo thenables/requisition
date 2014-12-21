@@ -166,4 +166,37 @@ describe('Response', function () {
       })
     })
   })
+
+  describe('.location', function () {
+    it('should return the location', function () {
+      return request('http://github.com').then(function (response) {
+        assert.equal(response.location, 'https://github.com/')
+        response.dump()
+      })
+    })
+  })
+
+  describe('.links', function () {
+    it('should return all the links', function () {
+      var app = express();
+      app.use(function (req, res) {
+        res.set('link', '<https://api.github.com/user/9287/repos?page=3&per_page=100>; rel="next", ' +
+          '<https://api.github.com/user/9287/repos?page=1&per_page=100>; rel="prev"; pet="cat", ' +
+          '<https://api.github.com/user/9287/repos?page=5&per_page=100>; rel="last"');
+        res.end('test');
+      })
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://127.0.0.1:' + port).then(function (response) {
+          assert(response.links.next)
+          assert(response.links.last)
+          response.dump()
+        })
+      })
+    })
+  })
 })
