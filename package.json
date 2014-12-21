@@ -15,6 +15,7 @@
     "mime-types": "^2.0.2",
     "mz": "^1.0.2",
     "native-or-bluebird": "^1.1.1",
+    "parse-link-header": "^0.2.0",
     "statuses": "^1.2.0",
     "stream-to-array": "^2.0.2",
     "type-is": "^1.5.2"
