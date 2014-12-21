@@ -32,7 +32,7 @@ describe('Response', function () {
     it('should return etag', function () {
       var app = express();
       app.use(function (req, res) {
-        res.set('ETag', 'test-etag');
+        res.set('ETag', '"test-etag"');
         res.end('test');
       })
       return new Promise(function (resolve, reject) {
@@ -42,7 +42,7 @@ describe('Response', function () {
         })
       }).then(function (port) {
         return request('http://127.0.0.1:' + port).then(function (response) {
-          assert(response.etag(), 'test-etag');
+          assert(response.etag, '"test-etag"');
         })
       })
     })
@@ -61,7 +61,7 @@ describe('Response', function () {
         })
       }).then(function (port) {
         return request('http://127.0.0.1:' + port).then(function (response) {
-          assert.equal(response.charset(), 'utf-8');
+          assert.equal(response.charset, 'utf-8');
         })
       })
     })
@@ -70,9 +70,9 @@ describe('Response', function () {
   describe('.lastModified()', function () {
     it('should return lastModified', function () {
       var app = express();
-      var lastModified = new Date(1417681633452).toUTCString();
+      var lastModified = new Date(1417681633000);
       app.use(function (req, res) {
-        res.set('Last-Modified', lastModified);
+        res.set('Last-Modified', lastModified.toUTCString());
         res.end('test');
       })
       return new Promise(function (resolve, reject) {
@@ -82,7 +82,7 @@ describe('Response', function () {
         })
       }).then(function (port) {
         return request('http://127.0.0.1:' + port).then(function (response) {
-          assert(response.lastModified(), lastModified);
+          assert.equal(response.lastModified.getTime(), lastModified.getTime());
         })
       })
     })
