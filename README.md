@@ -95,15 +95,15 @@ Set header `If-None-Match`.
 
 Set header `Content-Type`.
 
-### request().query(params)
+#### request().query(params)
 
 Add query string.
 
-### request().send(data)
+#### request().send(data)
 
 Add http body.
 
-### request().sendFile(filename)
+#### request().sendFile(filename)
 
 Send file.
 
@@ -127,15 +127,15 @@ See [type-is](https://github.com/jshttp/type-is).
 
 Get the value for a header.
 
-#### response.charset()
+#### response.charset
 
 Get charset.
 
-#### response.etag()
+#### response.etag
 
 Get header `ETag`.
 
-#### response.lastModified()
+#### response.lastModified
 
 Get header `Last-Modified`.
 
