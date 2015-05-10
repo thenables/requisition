@@ -3,6 +3,10 @@ node_js:
 - "0.12"
 - "1"
 - "2"
+matrix:
+  allow_failures:
+    - node_js: "1"
+sudo: false
 language: node_js
 script: "npm run-script test-travis"
 after_script: "npm install coveralls@2 && cat ./coverage/lcov.info | coveralls"
