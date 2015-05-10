@@ -169,7 +169,7 @@ describe('Response', function () {
 
   describe('.location', function () {
     it('should return the location', function () {
-      return request('http://github.com').then(function (response) {
+      return request('http://github.com').redirects(0).then(function (response) {
         assert.equal(response.location, 'https://github.com/')
         response.dump()
       })

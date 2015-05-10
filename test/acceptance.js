@@ -24,7 +24,7 @@ describe('Acceptance Tests', function () {
   })
 
   it('HEAD http://github.com', function () {
-    return request.head('http://github.com').then(function (response) {
+    return request.head('http://github.com').redirects(0).then(function (response) {
       assert.equal(response.status, 301);
     })
   })
