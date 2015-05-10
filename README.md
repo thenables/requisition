@@ -7,7 +7,6 @@
 [![Dependency Status][david-image]][david-url]
 [![License][license-image]][license-url]
 [![Downloads][downloads-image]][downloads-url]
-[![Gittip][gittip-image]][gittip-url]
 
 A light, fluent node.js HTTP client for ES6.
 Heavily inspired by [superagent](https://github.com/visionmedia/superagent)
@@ -195,5 +194,3 @@ Destroy the response.
 [license-url]: LICENSE
 [downloads-image]: http://img.shields.io/npm/dm/requisition.svg?style=flat-square
 [downloads-url]: https://npmjs.org/package/requisition
-[gittip-image]: https://img.shields.io/gratipay/jonathanong.svg?style=flat-square
-[gittip-url]: https://gratipay.com/jonathanong/
