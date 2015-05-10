@@ -3,7 +3,7 @@ var assert = require('assert');
 var request = require('..');
 
 describe('Acceptance Tests', function () {
-  it('GET http://github.com', function () {
+  it.skip('GET http://github.com', function () {
     return request('http://github.com').then(function (response) {
       assert.equal(response.status, 301);
       return response.text();
