@@ -32,6 +32,14 @@ async function () {
 }
 ```
 
+## Differences
+
+This is similar to other AJAX libraries like [axios](https://github.com/mzabriskie/axios) except:
+
+- Does not have browser support
+- Does not depend on gigantic options objects
+- Many utilities for handling HTTP responses like saving to a file
+
 ## API
 
 ```js
