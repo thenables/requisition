@@ -6,6 +6,7 @@
   "license": "MIT",
   "repository": "thenables/requisition",
   "dependencies": {
+    "any-promise": "^1.1.0",
     "destroy": "^1.0.3",
     "fs-cp": "^1.2.0",
     "http-errors": "^1.2.7",
@@ -14,7 +15,6 @@
     "methods": "^1.1.0",
     "mime-types": "^2.0.2",
     "mz": "^2.1.0",
-    "native-or-bluebird": "^1.1.1",
     "parse-link-header": "^0.4.1",
     "statuses": "^1.2.0",
     "stream-to-array": "^2.0.2",

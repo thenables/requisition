@@ -5,7 +5,7 @@ var auth = require('basic-auth');
 var express = require('express');
 var typer = require('media-typer');
 var bodyParser = require('body-parser');
-var Promise = require('native-or-bluebird');
+var Promise = require('any-promise');
 
 var request = require('..');
 

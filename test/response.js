@@ -1,5 +1,5 @@
 
-var Promise = require('native-or-bluebird');
+var Promise = require('any-promise');
 var tmpdir = require('os').tmpdir();
 var cat = require('concat-stream');
 var express = require('express');
