@@ -21,13 +21,13 @@
     "type-is": "^1.5.2"
   },
   "devDependencies": {
-    "basic-auth": "1",
+    "basic-auth": "^1.0.0",
     "bluebird": "^3.1.1",
     "body-parser": "^1.10.0",
     "concat-stream": "^1.4.7",
     "express": "^4.9.8",
-    "istanbul": "0",
-    "mocha": "2"
+    "istanbul": "^0.4.2",
+    "mocha": "^2.0.0"
   },
   "scripts": {
     "test": "mocha --bail",
