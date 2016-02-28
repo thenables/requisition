@@ -160,9 +160,11 @@ request('/users.json').then(function (response) {
 })
 ```
 
-#### response.saveTo(filename).then( filename => )
+#### response.saveTo([filename]).then( filename => )
 
 Save the response to a file.
+If no `filename` is specified,
+saves to a random file in your temporary directory.
 
 ```js
 request('/file.txt').then(function (response) {

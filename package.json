@@ -18,6 +18,7 @@
     "parse-link-header": "^0.4.1",
     "statuses": "^1.2.0",
     "stream-to-array": "^2.0.2",
+    "temp-path": "^1.0.0",
     "type-is": "^1.5.2"
   },
   "devDependencies": {

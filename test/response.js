@@ -153,6 +153,14 @@ describe('Response', function () {
         assert.equal(fs.readFileSync(filename, 'utf8').trim().indexOf('<!DOCTYPE html>'), 0);
       })
     })
+
+    it('should save to a random file if no filename is passed', function () {
+      return request('https://github.com').then(function (response) {
+        return response.saveTo();
+      }).then(function (filename) {
+        assert.equal(fs.readFileSync(filename, 'utf8').trim().indexOf('<!DOCTYPE html>'), 0);
+      })
+    })
   })
 
   describe('.pipe()', function () {
