@@ -1,5 +1,6 @@
 
 var Promise = require('any-promise');
+var cookieParser = require('cookie-parser');
 var tmpdir = require('os').tmpdir();
 var cat = require('concat-stream');
 var express = require('express');
@@ -42,7 +43,7 @@ describe('Response', function () {
         })
       }).then(function (port) {
         return request('http://127.0.0.1:' + port).then(function (response) {
-          assert(response.etag, '"test-etag"');
+          assert.equal(response.etag, '"test-etag"');
         })
       })
     })
@@ -83,6 +84,29 @@ describe('Response', function () {
       }).then(function (port) {
         return request('http://127.0.0.1:' + port).then(function (response) {
           assert.equal(response.lastModified.getTime(), lastModified.getTime());
+        })
+      })
+    })
+  })
+
+  describe('.cookies()', function () {
+    it('should get cookies', function () {
+      var app = express();
+      app.use(cookieParser());
+      app.use(function (req, res) {
+        res.cookie('name', 'test');
+        res.cookie('word', 'hello');
+        res.end();
+      })
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://127.0.0.1:' + port).then(function (response) {
+          assert.equal(response.cookies.name, 'test');
+          assert.equal(response.cookies.word, 'hello');
         })
       })
     })
