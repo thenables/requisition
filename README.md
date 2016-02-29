@@ -102,6 +102,18 @@ Set header `If-None-Match`.
 
 Set header `Content-Type`.
 
+#### request().cookie(key, value, options)
+
+Set cookie, uses [cookie.serialize()](https://github.com/jshttp/cookie)
+
+```js
+request('/cookie')
+  .cookie(name, value, options)
+  .then(function (response) {
+    console.info(response.cookies);
+  })
+```
+
 #### request().query(params)
 
 Add query string.
@@ -145,6 +157,15 @@ Get header `ETag`.
 #### response.lastModified
 
 Get header `Last-Modified`.
+
+#### response.cookies
+
+Get cookies
+
+```js
+request('/cookie').then(function (response) {
+  console.info(response.cookies);
+})
 
 #### response.buffer().then( buffer => )
 

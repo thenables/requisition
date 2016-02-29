@@ -6,6 +6,7 @@ var express = require('express');
 var typer = require('media-typer');
 var bodyParser = require('body-parser');
 var Promise = require('any-promise');
+var cookieParser = require('cookie-parser');
 
 var request = require('..');
 
@@ -267,6 +268,51 @@ describe('Request', function () {
     it('(json)', function () {
       var req = request('http://localhost').type('json');
       assert(req.headers['content-type'].match(/application\/json/));
+    })
+  })
+
+  describe('.cookie', function () {
+    var app = express();
+    app.use(cookieParser());
+    app.use(function (req, res, next) {
+      res.json(req.cookies);
+    })
+
+    it('(key, value)', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .cookie('name', 'test')
+          .cookie('word', 'hello')
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.deepEqual(data, { name: 'test', word: 'hello' });
+      })
+    })
+
+    it('(key, value, options)', function () {
+      return new Promise(function (resolve, reject) {
+        app.listen(function (err) {
+          if (err) throw err;
+          resolve(this.address().port);
+        })
+      }).then(function (port) {
+        return request('http://localhost:' + port)
+          .cookie('name', 'test', { path: '/' })
+          .cookie('word', 'hello', { path: '/test' })
+          .then(function (response) {
+            return response.json();
+          })
+      }).then(function (data) {
+        assert.equal(data.name, 'test');
+        assert.equal(data.word, 'hello');
+      })
     })
   })
 
