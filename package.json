@@ -30,7 +30,7 @@
     "cookie-parser": "^1.4.1",
     "express": "^4.9.8",
     "istanbul": "^0.4.2",
-    "mocha": "^2.0.0"
+    "mocha": "^2.5.0"
   },
   "scripts": {
     "test": "mocha --bail",
