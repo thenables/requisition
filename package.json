@@ -7,7 +7,7 @@
   "repository": "thenables/requisition",
   "dependencies": {
     "any-promise": "^1.1.0",
-    "cookie": "^0.2.3",
+    "cookie": "^0.3.1",
     "destroy": "^1.0.3",
     "fs-cp": "^1.2.0",
     "http-errors": "^1.2.7",
