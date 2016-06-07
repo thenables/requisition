@@ -166,6 +166,7 @@ Get cookies
 request('/cookie').then(function (response) {
   console.info(response.cookies);
 })
+```
 
 #### response.buffer().then( buffer => )
 
