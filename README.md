@@ -17,18 +17,18 @@ The API is quite minimal for now.
 Features will be added while people request or use them.
 
 ```js
-var req = require('requisition');
+const req = require('requisition');
 
 // GET a JSON body
 async function () {
-  var res = await req('/users.json');
-  var body = await res.json();
+  const res = await req('/users.json');
+  const body = await res.json();
 }
 
 // POST an image file
 async function () {
-  var res = await req.post('/images.json').sendFile('image.png');
-  var body = await res.json();
+  const res = await req.post('/images.json').sendFile('image.png');
+  const body = await res.json();
 }
 ```
 
@@ -43,7 +43,7 @@ This is similar to other AJAX libraries like [axios](https://github.com/mzabrisk
 ## API
 
 ```js
-var request = require('requisition');
+const request = require('requisition');
 ```
 
 ### Request
