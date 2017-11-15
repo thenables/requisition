@@ -16,7 +16,7 @@
     "methods": "^1.1.0",
     "mime-types": "^2.0.2",
     "mz": "^2.1.0",
-    "parse-link-header": "^0.4.1",
+    "parse-link-header": "^1.0.0",
     "statuses": "^1.2.0",
     "stream-to-array": "^2.0.2",
     "temp-path": "^1.0.0",
